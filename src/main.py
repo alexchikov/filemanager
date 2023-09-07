@@ -29,6 +29,7 @@ Commands:
 
 
 def parse_command(command: str) -> None:
+    # parse the input command
     splitted = command.split()
     if splitted[0] in commands.keys():
         match splitted[0]:
@@ -60,10 +61,12 @@ def parse_command(command: str) -> None:
 
 
 def mkd(path: str) -> None:
+    # make a directory
     os.mkdir(path)
 
 
 def dld(path: str):
+    # delete/drop a directory
     try:
         os.rmdir(path=path)
     except OSError:
@@ -71,6 +74,7 @@ def dld(path: str):
 
 
 def chd(path):
+    # change a path of directory
     try:
         os.chdir(path=path)
     except OSError:
@@ -78,30 +82,40 @@ def chd(path):
 
 
 def mkf(path):
-    open(path, 'w')
+    # make an empty file
+    try:
+        open(path, 'w')
+    except:
+        raise exc.CommandWrongArguments("Как  вы могли ошибиться в такой легкой команде :(")
 
 
 def wrt():
+    # write some text in file
     ...
 
 
 def dlf():
+    # delete a file
     ...
 
 
 def view():
+    # take a view file's contents
     ...
 
 
 def copy():
+    # copy a file from one directory to another
     ...
 
 
 def move():
+    # move a file from one directory to another
     ...
 
 
 def rname():
+    # change file name
     ...
 
 
