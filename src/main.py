@@ -89,9 +89,17 @@ def mkf(path):
         raise exc.CommandWrongArguments("Как  вы могли ошибиться в такой легкой команде :(")
 
 
-def wrt():
+def wrt(text: str, path:str):
     # write some text in file
-    ...
+    file = path
+    try:
+        with open(file, 'a') as f:
+            f.write(text)
+            print("Text is written successfully")
+    except:
+        raise FileNotFoundError("There isn't a file with that path")
+
+
 
 
 def dlf():
