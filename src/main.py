@@ -55,6 +55,11 @@ def parse_command(command: str) -> None:
                     commands['mkf'](splitted[1])
                 else:
                     raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
+            case 'view':
+                if len(splitted) == 2:
+                    commands['view'](splitted[1])
+                else:
+                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
 
     else:
         raise exc.CommandDoesNotExist("This command doesn't exist")
@@ -107,9 +112,18 @@ def dlf():
     ...
 
 
+<<<<<<< HEAD
 def view():
     # take a view file's contents
     ...
+=======
+def view(path: str):
+    try:
+        with open(path) as file:
+            print(*file.readlines())
+    except:
+        raise exc.CommandWrongArguments("This file doesn't exist")
+>>>>>>> 8bf369f5c729c4049ad9c4dc1afe31e625d41ab3
 
 
 def copy():
@@ -129,10 +143,13 @@ def rname():
 
 def run() -> str:
     command = input(f'\033[32m(filemanager\033[36m|\033[32m{os.getcwd()})\033[0m ')
-    try:
-        parse_command(command=command)
-    except:
-        print(f"\033[31m{traceback.format_exc()}", end='')
+    if command.strip() == "exit":
+        exit()
+    else:
+        try:
+            parse_command(command=command)
+        except:
+            print(f"\033[31m{traceback.format_exc()}", end='')
 
 
 commands = {'mkd': mkd, 'dld': dld,
