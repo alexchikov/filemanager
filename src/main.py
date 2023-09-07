@@ -112,18 +112,12 @@ def dlf():
     ...
 
 
-<<<<<<< HEAD
-def view():
-    # take a view file's contents
-    ...
-=======
 def view(path: str):
     try:
         with open(path) as file:
             print(*file.readlines())
     except:
         raise exc.CommandWrongArguments("This file doesn't exist")
->>>>>>> 8bf369f5c729c4049ad9c4dc1afe31e625d41ab3
 
 
 def copy():
