@@ -108,7 +108,7 @@ def wrt(text: str, path:str):
 
 
 def dlf():
-    # delete a file
+    # delete a file *Sanechek
     ...
 
 
@@ -121,17 +121,17 @@ def view(path: str):
 
 
 def copy():
-    # copy a file from one directory to another
+    # copy a file from one directory to another *Andrey
     ...
 
 
 def move():
-    # move a file from one directory to another
+    # move a file from one directory to another *Sanechek
     ...
 
 
-def rname():
-    # change file name
+def rname(): 
+    # change file name *Andrey
     ...
 
 
