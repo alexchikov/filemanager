@@ -3,7 +3,6 @@ import re
 import exc
 import traceback
 
-system = os.name
 banned_filenames = ['CON', 'PRN', 'AUX', 'NUL',
                     'COM0', 'COM1', 'COM2', 'COM3',
                     'COM4', 'COM5', 'COM6', 'COM7',
@@ -91,8 +90,8 @@ def mkf(path):
     try:
         open(path, 'w')
     except:
-        raise exc.CommandWrongArguments("Как  вы могли ошибиться в такой легкой команде :(")
-
+        raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
+    
 
 def wrt(text: str, path:str):
     # write some text in file
@@ -105,12 +104,10 @@ def wrt(text: str, path:str):
         raise FileNotFoundError("There isn't a file with that path")
 
 
-
-
 def dlf():
     # delete a file
     ...
-
+    
 
 def view(path: str):
     try:
