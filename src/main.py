@@ -59,7 +59,12 @@ def parse_command(command: str) -> None:
                     commands['view'](splitted[1])
                 else:
                     raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
-
+            case 'dlf':
+                if len(splitted) == 2:
+                    commands['dlf'](splitted[1])
+                else:
+                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
+    
     else:
         raise exc.CommandDoesNotExist("This command doesn't exist")
 
@@ -104,9 +109,11 @@ def wrt(text: str, path:str):
         raise FileNotFoundError("There isn't a file with that path")
 
 
-def dlf():
-    # delete a file *Sanechek
-    ...
+def dlf(path: str):
+    try:
+        os.remove(path)
+    except OSError:
+        raise exc.CommandWrongArguments("This file doesn't exist")
     
 
 def view(path: str):
