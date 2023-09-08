@@ -62,7 +62,15 @@ def parse_command(command: str) -> None:
                 else:
                     raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
             case 'copy':
-                copy(input(), input())
+                if len(splitted) == 3:
+                    commands['copy'](splitted[1], splitted[2])
+                else:
+                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
+            case 'move':
+                if len(splitted) == 3:
+                    commands['move'](splitted[1], splitted[2])
+                else:
+                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
     else:
         raise exc.CommandDoesNotExist("This command doesn't exist")
 
@@ -93,7 +101,7 @@ def mkf(path):
     try:
         open(path, 'w')
     except:
-        raise exc.CommandWrongArguments("Как  вы могли ошибиться в такой легкой команде :(")
+        raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
 
 
 def wrt(text: str, path:str):
@@ -105,8 +113,6 @@ def wrt(text: str, path:str):
             print("Text is written successfully")
     except:
         raise FileNotFoundError("There isn't a file with that path")
-
-
 
 
 def dlf():
@@ -124,18 +130,22 @@ def view(path: str):
 
 def copy(name_of_file : str, new_directory : str):
     # copy a file from one directory to another *Andrey
-    old_path = '\\'.join(os.path.abspath(name_of_file).split('\\')[:-2])
-    # old_path = '\\'.join(old)
-    new_path = old_path + '\\' + new_directory + '\\' + name_of_file
-    
-    # print(new_path)
-    shutil.copy(old_path, new_path)
+    try:
+        shutil.copy(name_of_file, new_directory)
+    except:
+        raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
 
 
-
-def move():
+def move(path_to_file: str, new_directory: str):
     # move a file from one directory to another *Sanechek
-    ...
+    try:
+        match system:
+            case 'posix':
+                os.rename(path_to_file, new_directory+'/'+path_to_file)
+            case 'nt':
+                os.rename(path_to_file, new_directory+'\\'+path_to_file)
+    except:
+        raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
 
 
 def rname(): 
