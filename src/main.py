@@ -2,7 +2,9 @@ import os
 import re
 import exc
 import traceback
+import shutil
 
+system = os.name
 banned_filenames = ['CON', 'PRN', 'AUX', 'NUL',
                     'COM0', 'COM1', 'COM2', 'COM3',
                     'COM4', 'COM5', 'COM6', 'COM7',
@@ -59,12 +61,8 @@ def parse_command(command: str) -> None:
                     commands['view'](splitted[1])
                 else:
                     raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
-            case 'dlf':
-                if len(splitted) == 2:
-                    commands['dlf'](splitted[1])
-                else:
-                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
-    
+            case 'copy':
+                copy(input(), input())
     else:
         raise exc.CommandDoesNotExist("This command doesn't exist")
 
@@ -95,8 +93,8 @@ def mkf(path):
     try:
         open(path, 'w')
     except:
-        raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
-    
+        raise exc.CommandWrongArguments("Как  вы могли ошибиться в такой легкой команде :(")
+
 
 def wrt(text: str, path:str):
     # write some text in file
@@ -109,12 +107,12 @@ def wrt(text: str, path:str):
         raise FileNotFoundError("There isn't a file with that path")
 
 
-def dlf(path: str):
-    try:
-        os.remove(path)
-    except OSError:
-        raise exc.CommandWrongArguments("This file doesn't exist")
-    
+
+
+def dlf():
+    # delete a file *Sanechek
+    ...
+
 
 def view(path: str):
     try:
@@ -124,9 +122,15 @@ def view(path: str):
         raise exc.CommandWrongArguments("This file doesn't exist")
 
 
-def copy():
+def copy(name_of_file : str, new_directory : str):
     # copy a file from one directory to another *Andrey
-    ...
+    old_path = '\\'.join(os.path.abspath(name_of_file).split('\\')[:-2])
+    # old_path = '\\'.join(old)
+    new_path = old_path + '\\' + new_directory + '\\' + name_of_file
+    
+    # print(new_path)
+    shutil.copy(old_path, new_path)
+
 
 
 def move():
