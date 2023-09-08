@@ -81,6 +81,11 @@ def parse_command(command: str) -> None:
                     commands['rname'](splitted[1], splitted[2])
                 else:
                     raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
+            case 'wrt':
+                if len(splitted) == 3:
+                    commands['wrt'](splitted[1], splitted[:2].strip('"'))
+                else:
+                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
     else:
         raise exc.CommandDoesNotExist("This command doesn't exist")
 
@@ -114,16 +119,13 @@ def mkf(path):
         raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
 
 
-def wrt(text: str, path:str):
+def wrt(text: str, path: str):
     # write some text in file
     file = path
     try:
-        with open(file, 'a') as f:
-            f.write(text)
-            print("Text is written successfully")
+        os.write(file, text)
     except:
         raise FileNotFoundError("There isn't a file with that path")
-
 
 
 def dlf(path: str):
@@ -142,7 +144,7 @@ def view(path: str):
         raise exc.CommandWrongArguments("This file doesn't exist")
 
 
-def copy(name_of_file : str, new_directory : str):
+def copy(name_of_file: str, new_directory: str):
     # copy a file from one directory to another *Andrey
     try:
         shutil.copy(name_of_file, new_directory)
@@ -162,17 +164,17 @@ def move(path_to_file: str, new_directory: str):
         raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
 
 
-def rname(file_name:str, new_name:str): 
+def rname(file_name: str, new_name: str):
     # change file name *Andrey
     try:
         os.rename(file_name, new_name)
     except:
         raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
-    
 
 
 def run() -> str:
-    command = input(f'\033[32m(filemanager\033[36m|\033[32m{os.getcwd()})\033[0m ')
+    command = input(
+        f'\033[32m(filemanager\033[36m|\033[32m{os.getcwd()})\033[0m ')
     if command.strip() == "exit":
         exit()
     else:
