@@ -76,6 +76,11 @@ def parse_command(command: str) -> None:
                     commands['dlf'](splitted[1])
                 else:
                     raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
+            case 'rname':
+                if len(splitted) == 3 and filename_regexp.fullmatch(splitted[1].strip('"')):
+                    commands['rname'](splitted[1], splitted[2])
+                else:
+                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
     else:
         raise exc.CommandDoesNotExist("This command doesn't exist")
 
@@ -157,9 +162,13 @@ def move(path_to_file: str, new_directory: str):
         raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
 
 
-def rname(): 
+def rname(file_name:str, new_name:str): 
     # change file name *Andrey
-    ...
+    try:
+        os.rename(file_name, new_name)
+    except:
+        raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
+    
 
 
 def run() -> str:
