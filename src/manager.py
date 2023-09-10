@@ -107,7 +107,10 @@ def dld(path: str):
 def chd(path):
     # change a path of directory
     try:
-        os.chdir(path=path)
+        if os.getcwd() == username and path == "..":
+            raise PermissionError
+        else:
+            os.chdir(path=path)
     except OSError:
         raise exc.CommandWrongArguments("This dir doesn't exist")
 
@@ -192,5 +195,7 @@ commands = {'mkd': mkd, 'dld': dld,
             'move': move, 'rname': rname}
 
 if __name__ == "__main__":
+    username = input("Your username: ")
+    password = input("Your password: ")
     while True:
         run()
