@@ -229,7 +229,6 @@ def auth(username: str, password: str):
     else:
         cursor.execute("""SELECT * FROM users WHERE username = ?""", (username,))
         usr = cursor.fetchone()
-        print(usr[2], sha256((password + usr[-1]).encode()).hexdigest())
         if sha256((password + usr[-1]).encode()).hexdigest() == usr[2]:
             os.chdir(username)
             return 1
