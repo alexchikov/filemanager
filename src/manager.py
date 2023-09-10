@@ -29,6 +29,8 @@ banned_filenames = ['CON', 'PRN', 'AUX', 'NUL',
                     'LPT6', 'LPT7', 'LPT8', 'LPT9']
 dirname_regexp = re.compile(r'[^<>:«|?*.«:;|=,]+')
 filename_regexp = re.compile(r'[-a-zA-Z0-9()!@$%^*_.]+')
+connection = sqlite3.connect(database="database.db")
+cursor = connection.cursor()
 
 
 def parse_command(command: str) -> None:
@@ -39,6 +41,17 @@ def parse_command(command: str) -> None:
             case 'help':
                 if len(splitted) == 1:
                     print(__doc__)
+            case 'clr':
+                if len(splitted) == 1:
+                    match system:
+                        case 'posix':
+                            os.system('clear')
+                        case 'nt':
+                            os.system('cls')
+            case 'drs':
+                if len(splitted) == 1:
+                    drs = os.listdir()
+                    print(f'\033[34m', *drs, '\033[0m', sep=' ')
             case 'mkd':
                 if len(splitted) == 2 and dirname_regexp.fullmatch(splitted[1].strip('"'))\
                         and splitted[1] not in banned_filenames:
@@ -199,7 +212,7 @@ def rname(file_name: str, new_name: str):
 
 def run() -> str:
     command = input(
-        f'\033[32m(filemanager\033[36m|\033[32m{os.getcwd()})\033[0m ')
+        f'\033[1m\033[32m(filemanager\033[36m|\033[32m{os.getcwd()})\033[0m ')
     if command.strip() == "exit":
         exit()
     else:
@@ -208,30 +221,33 @@ def run() -> str:
         except Exception as e:
             print(f"\033[31m{e}\n", end='')
 
-
+def reg(username: str, password: str):
+    salt = os.urandom(1024)
+    cursor.execute("""INSERT INTO users (username, password, salt) 
+                VALUES (?, ?, ?)""", (username,
+                                        sha256(
+                                            (password+salt.hex()).encode()).hexdigest(),
+                                        salt.hex(),))
+    connection.commit()
+    os.mkdir(username)
+    os.chdir(username)
+    return 1
+        
 def auth(username: str, password: str):
-    connection = sqlite3.connect(database="database.db")
-    cursor = connection.cursor()
-
     cursor.execute("SELECT 1 FROM users WHERE username = ?", (username,))
     if cursor.fetchall() == []:
-        salt = os.urandom(1024)
-        cursor.execute("""INSERT INTO users (username, password, salt) 
-                       VALUES (?, ?, ?)""", (username,
-                                             sha256(
-                                                 (password+salt.hex()).encode()).hexdigest(),
-                                             salt.hex(),))
-        connection.commit()
-
-        os.mkdir(username)
-        os.chdir(username)
-        return 1
+        reg(username=username, password=password)
+        
     else:
         cursor.execute("""SELECT * FROM users WHERE username = ?""", (username,))
         usr = cursor.fetchone()
         if sha256((password + usr[-1]).encode()).hexdigest() == usr[2]:
-            os.chdir(username)
-            return 1
+            try:
+                os.chdir(username)
+            except FileNotFoundError:
+                reg(username=username, password=password)
+            finally:
+                return 1
         else:
             raise NameError('Wrong password')
 
@@ -241,7 +257,8 @@ commands = {'mkd': mkd, 'dld': dld,
             'wrt': wrt, 'dlf': dlf,
             'view': view, 'copy': copy,
             'move': move, 'rname': rname,
-            'help': __doc__}
+            'help': __doc__, 'drs': os.listdir(),
+            'clr': None}
 
 if __name__ == "__main__":
     username = input("Your username: ")
