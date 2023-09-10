@@ -161,7 +161,7 @@ def dlf(path: str):
 def view(path: str):
     try:
         with open(path) as file:
-            print(*file.readlines())
+            print(*file.readlines(), sep='')
     except:
         raise exc.CommandWrongArguments("This file doesn't exist")
 
