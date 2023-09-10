@@ -82,10 +82,11 @@ def parse_command(command: str) -> None:
                 else:
                     raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
             case 'wrt':
-                if len(splitted) == 3:
-                    commands['wrt'](splitted[1], splitted[:2].strip('"'))
+                if len(splitted) >= 3:
+                    text = command.split("<=")
+                    commands['wrt'](splitted[1], text[1].strip('" "'))
                 else:
-                    raise exc.CommandWrongArguments("Wrong arguments was handled: wrong filename")
+                    raise exc.CommandWrongArguments("Wrong arguments was handled")
     else:
         raise exc.CommandDoesNotExist("This command doesn't exist")
 
@@ -119,11 +120,12 @@ def mkf(path):
         raise exc.CommandWrongArguments("Как вы могли ошибиться в такой легкой команде :(")
 
 
-def wrt(text: str, path: str):
+def wrt(path: str, text: str):
     # write some text in file
     file = path
     try:
-        os.write(file, text)
+        with open(path, "a+") as file:
+            file.write(text+'\n')
     except:
         raise FileNotFoundError("There isn't a file with that path")
 
@@ -180,9 +182,8 @@ def run() -> str:
     else:
         try:
             parse_command(command=command)
-        except:
-            print(f"\033[31m{traceback.format_exc()}", end='')
-
+        except Exception as e:
+            print(f"\033[31m{e}\n", end='')
 
 commands = {'mkd': mkd, 'dld': dld,
             'chd': chd, 'mkf': mkf,
@@ -193,4 +194,3 @@ commands = {'mkd': mkd, 'dld': dld,
 if __name__ == "__main__":
     while True:
         run()
-# string for Andrey
