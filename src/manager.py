@@ -6,8 +6,7 @@ import sqlite3
 import getpass
 from hashlib import sha256
 
-__doc__ = """
-Commands:
+__doc__ = """Commands:
     > mkd - using for creating dirs;
     > dld - using for drop dirs;
     > chd - using for changing dirs;
@@ -17,8 +16,7 @@ Commands:
     > view - for viewing files;
     > copy - for copying files;
     > move - for moving files;
-    > rname - for renaming files;
-          """
+    > rname - for renaming files;"""
 
 system = os.name
 banned_filenames = ['CON', 'PRN', 'AUX', 'NUL',
@@ -51,7 +49,7 @@ def parse_command(command: str) -> None:
             case 'drs':
                 if len(splitted) == 1:
                     drs = os.listdir()
-                    print(f'\033[34m', *drs, '\033[0m', sep=' ')
+                    print(f'\033[36m\033[1m', *drs, '\033[0m', sep=' ')
             case 'mkd':
                 if len(splitted) == 2 and dirname_regexp.fullmatch(splitted[1].strip('"'))\
                         and splitted[1] not in banned_filenames:
@@ -245,7 +243,8 @@ def auth(username: str, password: str):
             try:
                 os.chdir(username)
             except FileNotFoundError:
-                reg(username=username, password=password)
+                os.mkdir(username)
+                os.chdir(username)
             finally:
                 return 1
         else:
